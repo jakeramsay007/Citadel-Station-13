@@ -704,7 +704,7 @@
 	materials = list(MAT_METAL=15000, MAT_GLASS=15000, MAT_SILVER=10000, MAT_GOLD=10000, MAT_TITANIUM=5000, MAT_DIAMOND=5000)
 	construction_time = 120
 	category = list("Cyborg Upgrade Modules")
-	
+
 /datum/design/borg_upgrade_surgicalprocessor
 	name = "Cyborg Upgrade (Surgical Processor)"
 	id = "borg_upgrade_surgicalprocessor"
