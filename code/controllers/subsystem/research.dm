@@ -294,6 +294,17 @@ SUBSYSTEM_DEF(research)
 	//[88nodes * 5000points/node] / [1.5hr * 90min/hr * 60s/min]
 	//Around 450000 points max???
 
+	/// The global list of raw anomaly types that have been refined, for hard limits.
+	var/list/created_anomaly_types = list()
+	/// The hard limits of cores created for each anomaly type. For faster code lookup without switch statements.
+	var/list/anomaly_hard_limit_by_type = list(
+	ANOMALY_CORE_BLUESPACE = MAX_CORES_BLUESPACE,
+	ANOMALY_CORE_PYRO = MAX_CORES_PYRO,
+	ANOMALY_CORE_GRAVITATIONAL = MAX_CORES_GRAVITATIONAL,
+	ANOMALY_CORE_VORTEX = MAX_CORES_VORTEX,
+	ANOMALY_CORE_FLUX = MAX_CORES_FLUX
+	)
+
 /datum/controller/subsystem/research/Initialize()
 	point_types = TECHWEB_POINT_TYPE_LIST_ASSOCIATIVE_NAMES
 	initialize_all_techweb_designs()
@@ -307,7 +318,11 @@ SUBSYSTEM_DEF(research)
 	for(var/A in subtypesof(/obj/item/seeds))
 		var/obj/item/seeds/S = A
 		var/list/L = list()
-		L[TECHWEB_POINT_TYPE_GENERIC] = 50 + initial(S.rarity) * 2
+		//First we get are yield and rarity and times it by two
+		//Then we subtract production and maturation, making it so faster growing plants are better for RnD
+		//Then we add in lifespan and potency,
+		//A basic seed can be worth 268 points if its the best it can be.
+		L[TECHWEB_POINT_TYPE_GENERIC] = 50 + initial(S.rarity) * 2 + initial(S.yield) * 2 - initial(S.maturation) - initial(S.production) + initial(S.lifespan) + initial(S.potency)
 		techweb_point_items[S] = L
 
 	return ..()
